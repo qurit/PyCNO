@@ -25,7 +25,6 @@ def set_species_values(sbml_model, species_list):
     if species_list:
         [print(f"Species {species_name} not found in the model.") for species_name in species_list.keys()]
 
-
 def get_species(species_name, result, rr, sbml_model):
     for compartment in sbml_model.getListOfCompartments():
             if compartment.getName() == species_name.split('.')[0]:
@@ -34,8 +33,19 @@ def get_species(species_name, result, rr, sbml_model):
     for species in sbml_model.getListOfSpecies():
         if species.getName() == species_name.split('.')[1]:
             return (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
+        
+def sum_region(region, species_name, result, rr, sbml_model):
+    total = np.zeros(result.shape[0])
+    for compartment in sbml_model.getListOfCompartments():
+            if region in compartment.getName():
+                compartment_id = compartment.getId()
+                compartment_size = getattr(rr, compartment_id)
+                for species in sbml_model.getListOfSpecies():
+                    if species.getCompartment() == compartment_id and species_name in species.getName():
+                        total += (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
+    return total
 
-# %%
+# %% Example Usage
 if __name__ == '__main__':
     model_path = 'model/PSMAModel.sbml'
     reader = libsbml.SBMLReader()
@@ -43,7 +53,6 @@ if __name__ == '__main__':
     sbml_model = document.getModel()
     DECAY_CONSTANT = 0.00632
     NMOL2MBQ = DECAY_CONSTANT / 60 * 6.022e23 / 10**9 / 10**6
-
 
     parameter_list = {'lambdaPhys': DECAY_CONSTANT,
                      'Tumor1Volume': 0.01,
@@ -80,17 +89,14 @@ if __name__ == '__main__':
     rr = roadrunner.RoadRunner(sbml_string)
     result = rr.simulate(0, 500, 1000)
 
-# %%
-
-def sum_region(region, species_name, result, rr, sbml_model):
-    for compartment in sbml_model.getListOfCompartments():
-            if region in compartment.getName():
-                compartment_id = compartment.getId()
-                compartment_size = getattr(rr, compartment_id)
-                for species in sbml_model.getListOfSpecies():
-                    if species.getCompartment() == compartment_id and species_name in species.getName():
-                        total = total + (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
-
-time = result['time']
-tumor1 = sum_region('Tumor1', 'Hot', result, rr, sbml_model)
-# %%
+    time = result['time']
+    tumor1 = sum_region('Tumor1', 'Hot', result, rr, sbml_model)
+    SG = sum_region('SG', 'Hot', result, rr, sbml_model)
+    Kidney = sum_region('Kidney', 'Hot', result, rr, sbml_model)
+    plt.plot(time, tumor1, label='Tumor1')
+    plt.plot(time, SG, label='SG')
+    plt.plot(time, Kidney, label='Kidney')
+    plt.legend()
+    plt.xlabel('Time')
+    plt.ylabel('MBq')
+    plt.show()
