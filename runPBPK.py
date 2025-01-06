@@ -33,6 +33,7 @@ def get_parameter(sbml_model, parameter_name):
             print(f"Parameter {parameter_name} not found in the model.")
 
 def get_species(species_name, result, rr, sbml_model):
+    NMOL2MBQ = get_parameter(sbml_model, 'lambdaPhys') / 60 * 6.022e23 / 10**9 / 10**6
     for compartment in sbml_model.getListOfCompartments():
             if compartment.getName() == species_name.split('.')[0]:
                 compartment_size = getattr(rr, compartment.getId())
@@ -42,6 +43,7 @@ def get_species(species_name, result, rr, sbml_model):
             return (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
         
 def sum_region(region, species_name, result, rr, sbml_model):
+    NMOL2MBQ = get_parameter(sbml_model, 'lambdaPhys') / 60 * 6.022e23 / 10**9 / 10**6
     total = np.zeros(result.shape[0])
     for compartment in sbml_model.getListOfCompartments():
             if region in compartment.getName():
@@ -59,7 +61,6 @@ if __name__ == '__main__':
     document = reader.readSBML(model_path)
     sbml_model = document.getModel()
     DECAY_CONSTANT = 0.00632
-    NMOL2MBQ = DECAY_CONSTANT / 60 * 6.022e23 / 10**9 / 10**6
 
     parameter_list = {'lambdaPhys': DECAY_CONSTANT,
                      'Tumor1Volume': 0.01,
