@@ -7,11 +7,11 @@ import roadrunner
 # %%
 def set_parameter_values(sbml_model, parameter_list):
     for parameter in sbml_model.getListOfParameters():
-        for paramter_name in list(parameter_list.keys()):
-            if parameter.getName() == paramter_name:
-                parameter.setValue(parameter_list.pop(paramter_name))
+        for parameter_name in list(parameter_list.keys()):
+            if parameter.getName() == parameter_name:
+                parameter.setValue(parameter_list.pop(parameter_name))
     if parameter_list:
-        [print(f"Parameter {paramter_name} not found in the model.") for paramter_name in parameter_list.keys()]
+        [print(f"Parameter {parameter_name} not found in the model.") for parameter_name in parameter_list.keys()]
 
 def set_species_values(sbml_model, species_list):
     for species_name in list(species_list.keys()):
@@ -24,6 +24,13 @@ def set_species_values(sbml_model, species_list):
                 break
     if species_list:
         [print(f"Species {species_name} not found in the model.") for species_name in species_list.keys()]
+
+def get_parameter(sbml_model, parameter_name):
+    for parameter in sbml_model.getListOfParameters():
+        if parameter.getName() == parameter_name:
+                return parameter.getValue()
+        else:
+            print(f"Parameter {parameter_name} not found in the model.")
 
 def get_species(species_name, result, rr, sbml_model):
     for compartment in sbml_model.getListOfCompartments():
