@@ -192,8 +192,8 @@ bodyHeight = ?</body>
       <species id="mw1d1f7597_2b99_4e76_9e59_09850dd6a1ce" name="AlbHot" compartment="mwf54375f0_ce8e_4550_b3cc_fddc9154a2aa" initialAmount="0" substanceUnits="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
       <species id="mwb61e1555_80c8_485e_a047_6cfb90efa5db" name="AlbCold" compartment="mwf54375f0_ce8e_4550_b3cc_fddc9154a2aa" initialAmount="0" substanceUnits="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
       <species id="mwe40e7074_ec86_4d99_89b7_91aaea3a70a3" name="Albumin" compartment="mwf54375f0_ce8e_4550_b3cc_fddc9154a2aa" initialAmount="0" substanceUnits="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="mwd9c5a751_68fc_4d2d_8ff1_4786aaad4fb3" name="Hot" compartment="mw76036d7f_e6d6_46cc_8ff8_636cea28ecd4" initialAmount="0" substanceUnits="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="mwc192513a_08b7_4c33_9d20_5cd7137a3f4b" name="Cold" compartment="mw76036d7f_e6d6_46cc_8ff8_636cea28ecd4" initialAmount="0" substanceUnits="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="mwd9c5a751_68fc_4d2d_8ff1_4786aaad4fb3" name="Hot" compartment="mw76036d7f_e6d6_46cc_8ff8_636cea28ecd4" initialAmount="10.32" substanceUnits="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="mwc192513a_08b7_4c33_9d20_5cd7137a3f4b" name="Cold" compartment="mw76036d7f_e6d6_46cc_8ff8_636cea28ecd4" initialAmount="100" substanceUnits="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
       <species id="mwc1b96d5a_bc70_4ebe_8801_21afb5b6d6d6" name="AlbHot" compartment="mw76036d7f_e6d6_46cc_8ff8_636cea28ecd4" initialAmount="0" substanceUnits="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
       <species id="mw49760013_fccd_4b79_afab_3914e19bdcf8" name="AlbCold" compartment="mw76036d7f_e6d6_46cc_8ff8_636cea28ecd4" initialAmount="0" substanceUnits="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
       <species id="mw0e78226b_16ce_4a73_830d_2f314641f599" name="Albumin" compartment="mw76036d7f_e6d6_46cc_8ff8_636cea28ecd4" initialAmount="0" substanceUnits="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
@@ -380,30 +380,30 @@ bodyHeight = ?</body>
       <parameter id="mw9e4e008f_a5f5_4322_af63_10e239cae6ec" name="F_Tumor1" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw8f39fd06_5390_4df8_8666_b73944e89e9e" name="PSAlb_Tumor1" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw1aa52ba3_99c4_4b0f_ad77_548df7b6f91c" name="PS_Tumor1" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
-      <parameter id="mwf0fd8445_1f4d_40b7_abaa_4f181748365f" name="Rden_Tumor1" value="-1" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
+      <parameter id="mwf0fd8445_1f4d_40b7_abaa_4f181748365f" name="Rden_Tumor1" value="0" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
       <parameter id="mwa4dd32aa_b3ab_46b0_b247_cf78f48f2d55" name="R0_Tumor1" value="-1" units="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" constant="true"/>
       <parameter id="mwdbe3dcff_0d10_49b5_88d1_ea7fbc36350f" name="lambdaIntern_Tumor1" value="0.001" units="MWDERIVEDUNIT_1__minute" constant="true"/>
-      <parameter id="mw16260156_3bde_4bd5_af16_218c8d380ad1" name="lambdaRel_Tumor1" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
+      <parameter id="mw16260156_3bde_4bd5_af16_218c8d380ad1" name="lambdaRel_Tumor1" value="1.5e-4" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mwf3f98007_2496_4e37_8884_d560f8b33ad7" name="F_Tumor2" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mwa879d8e3_8373_4625_9379_0d95c1ff8f5e" name="PSAlb_Tumor2" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mwb11f47ea_bc95_474c_b593_7abc0004ddee" name="PS_Tumor2" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
-      <parameter id="mwab7f1e8e_84e1_4f1c_b174_49f2c3e09746" name="Rden_Tumor2" value="-1" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
+      <parameter id="mwab7f1e8e_84e1_4f1c_b174_49f2c3e09746" name="Rden_Tumor2" value="0" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
       <parameter id="mwa5b5670a_8683_41f0_821d_bfc1f6ef57d8" name="R0_Tumor2" value="-1" units="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" constant="true"/>
       <parameter id="mwac5f7994_e763_4887_87b8_790f226e7756" name="lambdaIntern_Tumor2" value="0.001" units="MWDERIVEDUNIT_1__minute" constant="true"/>
-      <parameter id="mw9fecd638_9002_47fe_969a_39b58ce7a620" name="lambdaRel_Tumor2" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
+      <parameter id="mw9fecd638_9002_47fe_969a_39b58ce7a620" name="lambdaRel_Tumor2" value="1.5e-4" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mw72ce87a9_41d1_4207_81c3_897839226c8c" name="F_TumorRest" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw349d6a62_1960_483c_ba29_13943d243187" name="PSAlb_TumorRest" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw813daccc_a7d6_4267_b2ab_ec014d78edc3" name="PS_TumorRest" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw42f37033_d583_426e_8d9b_4a1160eb37e0" name="Rden_TumorRest" value="266" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
-      <parameter id="mwe760010b_e0bf_4ae5_b666_a06bf66a239f" name="R0_TumorRest" value="-1" units="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" constant="true"/>
+      <parameter id="mwe760010b_e0bf_4ae5_b666_a06bf66a239f" name="R0_TumorRest" value="13" units="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" constant="true"/>
       <parameter id="mw69ffa6b4_c05c_4bdb_855b_5541d810d0e6" name="lambdaIntern_TumorRest" value="0.001" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mw5de1d077_53e0_48c5_8083_60335f0d97ea" name="lambdaRel_TumorRest" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mwea28d321_51f5_41e3_a6c0_806c071bb82d" name="F_SG" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw846ad128_648f_464a_8c8a_b4e7e813af9d" name="PS_SG" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
-      <parameter id="mw5c8a786d_0834_468c_9b6f_173408fcdf52" name="Rden_SG" value="-1" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
+      <parameter id="mw5c8a786d_0834_468c_9b6f_173408fcdf52" name="Rden_SG" value="10" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
       <parameter id="mw8b729cf1_3be8_4039_af90_5e60ad8f8ad0" name="R0_SG" value="-1" units="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" constant="true"/>
       <parameter id="mw6229449e_d285_4bf1_bd42_c12b26956d47" name="lambdaIntern_SG" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
-      <parameter id="mw857f75e3_e3a9_4c50_83fa_65f8b3261527" name="lambdaRel_SG" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
+      <parameter id="mw857f75e3_e3a9_4c50_83fa_65f8b3261527" name="lambdaRel_SG" value="1.5e-4" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mwbdb6bdc2_7822_4aa7_b8bf_9f318b912b3b" name="F_Spleen" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw6e51aac1_a360_4970_a5a4_44e97d30b9cf" name="PS_Spleen" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw72530289_8adc_4db9_b769_4130f7bddf8f" name="Rden_Spleen" value="-1" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
@@ -447,21 +447,21 @@ bodyHeight = ?</body>
       <parameter id="mw7194c5d8_8401_403a_8247_da3aaa7c06b1" name="F_Lungs" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw05ca3f58_3a5c_4231_95cc_c7a4ea479142" name="PS_Lungs" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw79c3f221_7311_49d4_ba83_8478acb753dc" name="F_Kidney" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
-      <parameter id="mwdf0e858e_5f4e_4896_84c6_c747022c4927" name="TER_Kidney" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
-      <parameter id="mwfcbe9b55_7a84_4331_a602_48c25be48d70" name="Rden_Kidney" value="-1" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
+      <parameter id="mwdf0e858e_5f4e_4896_84c6_c747022c4927" name="TER_Kidney" value="0.2" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
+      <parameter id="mwfcbe9b55_7a84_4331_a602_48c25be48d70" name="Rden_Kidney" value="14" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
       <parameter id="mwcd2a0f6f_331a_4f9f_9b70_de80d5290f0b" name="R0_Kidney" value="-1" units="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" constant="true"/>
       <parameter id="mw2b9ba936_ebc0_4dc4_9030_4c18aeb6bea3" name="lambdaIntern_Kidney" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
-      <parameter id="mwe515635f_41e8_4f7b_a2a1_5e71e792382c" name="lambdaRel_Kidney" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
+      <parameter id="mwe515635f_41e8_4f7b_a2a1_5e71e792382c" name="lambdaRel_Kidney" value="1.5e-4" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mw1514e5a7_3e51_4ec7_ba64_08f7b52578f2" name="GFR" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mwb49f03be_b53c_4887_844d_6183eab44ee0" name="phi" value="0.66" units="dimensionless" constant="true"/>
       <parameter id="mwdd2f7ab5_1b14_4159_bff5_365741414beb" name="f_exc" value="0.96" units="dimensionless" constant="true"/>
       <parameter id="mw2605c294_6d30_42e7_a1a6_6ca58ceae13e" name="lambdaIntern_Normal" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mw53d81bc7_c04b_4b4e_b603_387613820358" name="lambdaRel_Normal" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mw08318453_36c2_4945_8bde_464fa5f9fd33" name="density" value="1" units="MWDERIVEDUNIT_kilogram__liter" constant="true"/>
-      <parameter id="mw6adf8365_1848_45bc_b7bc_3ac817a05dee" name="bodySurfaceArea" value="-1" units="MWDERIVEDUNIT_meter___2" constant="true"/>
+      <parameter id="mw6adf8365_1848_45bc_b7bc_3ac817a05dee" name="bodySurfaceArea" value="1.9" units="MWDERIVEDUNIT_meter___2" constant="true"/>
       <parameter id="mw06f71bf0_1245_4077_8fcc_9b9f4e329756" name="hematocrit" value="0.4" units="dimensionless" constant="true"/>
-      <parameter id="mwe74d568b_4e29_4730_aea8_64229b27d0a7" name="bodyHeight" value="-1" units="MWBUILTINUNIT_meter" constant="true"/>
-      <parameter id="mwf86afef3_7825_44ea_9b1a_12456706e46f" name="bodyWeight" value="-1" units="kilogram" constant="true"/>
+      <parameter id="mwe74d568b_4e29_4730_aea8_64229b27d0a7" name="bodyHeight" value="100" units="MWBUILTINUNIT_meter" constant="true"/>
+      <parameter id="mwf86afef3_7825_44ea_9b1a_12456706e46f" name="bodyWeight" value="160" units="kilogram" constant="true"/>
       <parameter id="mwaee1a84b_fe6b_4758_aae6_efd9925e48a6" name="F" value="-1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw848ea43a_5945_4228_9331_d8681ebc8359" name="V_p" value="-1" units="MWBUILTINUNIT_liter" constant="true"/>
       <parameter id="mw4f119ccc_4a42_4478_8604_3f965ee9ccb2" name="kPS_Tumor1" value="0.6" units="MWDERIVEDUNIT_1__minute" constant="true"/>
@@ -481,9 +481,9 @@ bodyHeight = ?</body>
       <parameter id="mw44396b01_1bc3_4875_8c87_50853310fe6d" name="kPS_Bone" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mw742b532d_5c86_4f69_af2f_0f3a8470c794" name="kPS_Heart" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mwfb283d41_0211_496a_bd61_c44d519a2cff" name="kPS_Lungs" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
-      <parameter id="mwbb057890_e09c_440f_8251_7f18190eaf2b" name="kPSAlb_Tumor1" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
-      <parameter id="mw3d5874a8_9135_47a5_b9ef_f388ffe28bd3" name="kPSAlb_Tumor2" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
-      <parameter id="mw09165f4b_e5cf_4c5b_bb1a_cf6a75a2f051" name="kPSAlb_TumorRest" value="-1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
+      <parameter id="mwbb057890_e09c_440f_8251_7f18190eaf2b" name="kPSAlb_Tumor1" value="0" units="MWDERIVEDUNIT_1__minute" constant="true"/>
+      <parameter id="mw3d5874a8_9135_47a5_b9ef_f388ffe28bd3" name="kPSAlb_Tumor2" value="0" units="MWDERIVEDUNIT_1__minute" constant="true"/>
+      <parameter id="mw09165f4b_e5cf_4c5b_bb1a_cf6a75a2f051" name="kPSAlb_TumorRest" value="0" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mwdc6c9524_b2dd_4d89_a2a6_95289cdb2a5e" name="F_Total" value="1" units="MWDERIVEDUNIT_liter__minute" constant="true"/>
       <parameter id="mw2a573f75_de12_406c_945c_5c70eeb60600" name="f_SG" value="1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
       <parameter id="mwc5928c05_2cf4_4aa4_b0b6_9b0b7195b8aa" name="f_Prostate" value="1" units="MWDERIVEDUNIT_1__minute" constant="true"/>
@@ -502,7 +502,7 @@ bodyHeight = ?</body>
       <parameter id="mwd40f5946_b154_4bc0_8a27_693b932a0ae8" name="dLiterKg" value="1" units="MWDERIVEDUNIT_liter__kilogram" constant="true"/>
       <parameter id="mwacea616f_bbd6_429a_af63_fc6d9525c90d" name="numberPerNanomole" value="602200000000000" units="dimensionless" constant="true"/>
       <parameter id="mwb885e62e_2356_40d8_bbd1_6cefd21eecb1" name="Tumor1VolumeCoeff" value="1" units="dimensionless" constant="true"/>
-      <parameter id="mw476e73c6_18f8_4cf4_b61d_305746b320b4" name="Tumor1Volume" value="-1" units="MWBUILTINUNIT_liter" constant="true"/>
+      <parameter id="mw476e73c6_18f8_4cf4_b61d_305746b320b4" name="Tumor1Volume" value="0.1" units="MWBUILTINUNIT_liter" constant="true"/>
       <parameter id="mwfc94afc0_69dc_4409_8986_9ea393347f63" name="Albumin_0" value="-1" units="MWBUILTINPREFIX_nano_MWBUILTINUNIT_mole" constant="true"/>
       <parameter id="mwd7cb3ca6_6c72_406d_8a1a_152fc3c4e58f" name="AlbuminDen" value="-1" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>
       <parameter id="mw193de73f_36fd_4363_b819_30a158276f16" name="K_D_Alb" value="-1" units="MWDERIVEDUNIT_nanomole__liter" constant="true"/>

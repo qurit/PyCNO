@@ -1,15 +1,15 @@
 #%%
 import libsbml
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import roadrunner
+import os
+from tqdm.contrib.concurrent import process_map
 # %%
 def set_parameter_values(sbml_model, parameter_list):
     for parameter in sbml_model.getListOfParameters():
         for parameter_name in list(parameter_list.keys()):
             if parameter.getName() == parameter_name:
-                parameter.setValue(parameter_list.pop(parameter_name))
+                parameter.setValue(float(parameter_list.pop(parameter_name)))
     if parameter_list:
         [print(f"Parameter {parameter_name} not found in the model.") for parameter_name in parameter_list.keys()]
 
@@ -29,8 +29,13 @@ def get_parameter(sbml_model, parameter_name):
     for parameter in sbml_model.getListOfParameters():
         if parameter.getName() == parameter_name:
                 return parameter.getValue()
-        else:
-            print(f"Parameter {parameter_name} not found in the model.")
+    print(f"Parameter {parameter_name} not found in the model.")
+
+def get_parameter_id(sbml_model, parameter_name):
+    for parameter in sbml_model.getListOfParameters():
+        if parameter.getName() == parameter_name:
+                return parameter.getId()
+    print(f"Parameter {parameter_name} not found in the model.")
 
 def get_species(species_name, result, rr, sbml_model):
     NMOL2MBQ = get_parameter(sbml_model, 'lambdaPhys') / 60 * 6.022e23 / 10**9 / 10**6
@@ -54,57 +59,82 @@ def sum_region(region, species_name, result, rr, sbml_model):
                         total += (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
     return total
 
-# %% Example Usage
-if __name__ == '__main__':
-    model_path = 'model/PSMAModel.sbml'
-    reader = libsbml.SBMLReader()
-    document = reader.readSBML(model_path)
+def parameter_sweep(sbml_string, start, stop, steps, parameter_ids, swept_values):
+    document = libsbml.readSBMLFromString(sbml_string)
     sbml_model = document.getModel()
-    DECAY_CONSTANT = 0.00632
-
-    parameter_list = {'lambdaPhys': DECAY_CONSTANT,
-                     'Tumor1Volume': 0.01,
-                     'lambdaRel_Tumor1': 1.5e-4,
-                     'Tumor1VolumeCoeff': 1,
-                     'Rden_Tumor2': 0,
-                     'lambdaRel_Tumor2': 1.5e-4,
-                     'lambdaRel_SG': 4.2e-4,
-                     'lambdaRel_Kidney': 2.9e-4,
-                     'TER_Kidney': 0.2,
-                     'bodySurfaceArea': 1.9,
-                     'bodyWeight': 100,
-                     'bodyHeight': 160,
-                     'f_SG': 0.074,
-                     'R0_TumorRest': 13,
-                     'kPSAlb_Tumor1': 0,
-                     'kPSAlb_Tumor2': 0,
-                     'kPSAlb_TumorRest': 0,
-                     'k_on_toAlb': 0,
-                     'k_off_toAlb': 0,
-                     'AlbuminDen': 0,
-                     'K_D_Alb': 1,
-                     'Rden_Tumor1': 100,
-                     'Rden_SG': 38,
-                     'Rden_Kidney': 14,
-                     }
-    set_parameter_values(sbml_model, parameter_list)
-
-    species_list = {'Vein.Hot': 0.005,
-                    'Vein.Cold': 3.995}
-    set_species_values(sbml_model, species_list)
+    for i, id in enumerate(parameter_ids):
+        sbml_model.getParameter(id).setValue(swept_values[i])
 
     sbml_string = libsbml.writeSBMLToString(document)
     rr = roadrunner.RoadRunner(sbml_string)
-    result = rr.simulate(0, 500, 1000)
+    result = rr.simulate(start, stop, steps)
+    return result
 
-    time = result['time']
-    tumor1 = sum_region('Tumor1', 'Hot', result, rr, sbml_model)
-    SG = sum_region('SG', 'Hot', result, rr, sbml_model)
-    Kidney = sum_region('Kidney', 'Hot', result, rr, sbml_model)
-    plt.plot(time, tumor1, label='Tumor1')
-    plt.plot(time, SG, label='SG')
-    plt.plot(time, Kidney, label='Kidney')
-    plt.legend()
-    plt.xlabel('Time')
-    plt.ylabel('MBq')
-    plt.show()
+def multicore_parameter_sweep(args):
+        return parameter_sweep(*args)
+
+def runPBPK(start: int = 0, 
+            stop: int = 60, 
+            steps: int = 100, 
+            hotamount: float = None, 
+            coldamount = None, 
+            parameters: dict = None,
+            observables: list = None,
+            swept_parameters: list = None,
+            swept_values: list = None
+            ):
+    #ADD Docstring
+    path = os.path.dirname(__file__)
+    modelpath = os.path.join(path, 'model/PSMAModel.sbml')
+    print(modelpath)
+    reader = libsbml.SBMLReader()
+    document = reader.readSBML(modelpath)
+    sbml_model = document.getModel()
+
+    if parameters:
+        set_parameter_values(sbml_model, parameters)
+
+    if hotamount:
+        if coldamount:
+            species_list = {'Vein.Hot': hotamount,
+                            'Vein.Cold': coldamount}
+        else:
+            species_list = {'Vein.Hot': hotamount}
+        set_species_values(sbml_model, species_list)
+
+    if swept_parameters:
+        parameter_ids = []
+        for parameter in swept_parameters:
+            parameter_ids.append(get_parameter_id(sbml_model, parameter))
+        sbml_string = libsbml.writeSBMLToString(document)
+
+        args = [(sbml_string, start, stop, steps, parameter_ids, values) for values in swept_values]
+        results = process_map(multicore_parameter_sweep, args)
+              
+    else:
+        sbml_string = libsbml.writeSBMLToString(document)
+        rr = roadrunner.RoadRunner(sbml_string)
+        result = rr.simulate(start, stop, steps)
+
+    if not observables:
+        observables = ['Tumor1', 'Tumor2', 'Kidney', 'Heart', 'SG', 'Bone', 'TumorRest', 'Spleen', 'Liver', 'Prostate', 'GI', 'Rest', 'Skin', 'Muscle', 'Brain', 'RedMarrow', 'Lungs', 'Adipose']
+    
+    time = np.linspace(start, stop, steps)
+    TACs = np.zeros((len(time), len(observables)))
+    for i, observable in enumerate(observables):
+        TACs[:,i] = (sum_region(observable, 'Hot', result, rr, sbml_model))
+
+    return time, TACs
+
+# %% Example Usage
+if __name__ == '__main__':
+    import matplotlib.pyplot as plt
+    swept_parameters = ['Tumor1Volume', 'Rden_Tumor1']
+    swept_values = [(Tumor1Volume,Rden_Tumor1)
+                    for Tumor1Volume in np.linspace(0.1, 0.5, 24)
+                    for Rden_Tumor1 in np.arange(0.1, 0.5, 0.1)
+                    ]
+    
+    time, TACs = runPBPK(swept_parameters=swept_parameters, swept_values=swept_values)
+    # plt.plot(time, TACs)
+    # plt.show()
