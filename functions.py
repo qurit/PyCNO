@@ -1,10 +1,9 @@
-#%%
 import libsbml
 import numpy as np
 import roadrunner
 import os
 from tqdm.contrib.concurrent import process_map
-# %%
+
 def set_parameter_values(sbml_model, parameter_list):
     for parameter in sbml_model.getListOfParameters():
         for parameter_name in list(parameter_list.keys()):
@@ -125,16 +124,3 @@ def runPBPK(start: int = 0,
         TACs[:,i] = (sum_region(observable, 'Hot', result, rr, sbml_model))
 
     return time, TACs
-
-# %% Example Usage
-if __name__ == '__main__':
-    import matplotlib.pyplot as plt
-    swept_parameters = ['Tumor1Volume', 'Rden_Tumor1']
-    swept_values = [(Tumor1Volume,Rden_Tumor1)
-                    for Tumor1Volume in np.linspace(0.1, 0.5, 24)
-                    for Rden_Tumor1 in np.arange(0.1, 0.5, 0.1)
-                    ]
-    
-    time, TACs = runPBPK(swept_parameters=swept_parameters, swept_values=swept_values)
-    # plt.plot(time, TACs)
-    # plt.show()
