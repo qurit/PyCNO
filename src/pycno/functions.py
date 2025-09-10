@@ -1,7 +1,7 @@
 import libsbml
 import numpy as np
 import roadrunner
-import os
+from pathlib import Path
 from tqdm.contrib.concurrent import process_map
 
 def set_parameter_values(sbml_model, parameter_list):
@@ -56,6 +56,8 @@ def sum_region(region, species_name, result, sbml_model):
                 for species in sbml_model.getListOfSpecies():
                     if species.getCompartment() == compartment_id and species_name in species.getName():
                         total += (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
+                        print(compartment_size)
+
     return total
 
 def parameter_sweep(sbml_string, start, stop, steps, parameter_ids, swept_values):
@@ -72,22 +74,49 @@ def parameter_sweep(sbml_string, start, stop, steps, parameter_ids, swept_values
 def multicore_parameter_sweep(args):
         return parameter_sweep(*args)
 
-def runPBPK(model_path: str = None,
+def run_model(model_name: str = None,
             start: int = 0, 
             stop: int = 60, 
             steps: int = 100, 
-            hotamount: float = None, 
-            coldamount: float = None, 
+            hotamount: float = 10, 
+            coldamount: float = 100, 
             parameters: dict = None,
             observables: list = None,
             swept_parameters: list = None,
             swept_values: list = None
             ):
-    #ADD Docstring
+    
     num_curves = 1
+    module_path = Path(__file__).parent
+    model_path = module_path / "models" / f"{model_name}.sbml"
     reader = libsbml.SBMLReader()
     document = reader.readSBML(model_path)
     sbml_model = document.getModel()
+
+    # Set parameters based on matlab variants (temporary fix)
+    varinat_values = {'Rden_Tumor1': 57,
+                      'Rden_Tumor2': 19,
+                      'Rden_SG': 38,
+                      'Rden_Kidney': 14,
+                      'lambdaRel_Tumor1': 1.5e-04,
+                      'lambdaRel_Tumor2': 1.5e-04,
+                      'lambdaRel_SG': 4.2e-04,
+                      'lambdaRel_Kidney': 2.9e-04,
+                      'TER_Kidney': 0.2,
+                      'bodySurfaceArea': 1.9,
+                      'bodyWeight': 100,
+                      'bodyHeight': 160,
+                      'f_SG': 0.0740,
+                      'R0_TumorRest': 13,
+                      
+                      'kPSAlb_Tumor1': 0,
+                      'kPSAlb_Tumor2': 0,
+                      'kPSAlb_TumorRest': 0,
+                      'k_on_toAlb': 0,
+                      'k_off_toAlb': 0,
+                      'AlbuminDen': 0,
+                      'K_D_Alb': 1}
+    set_parameter_values(sbml_model, varinat_values)
 
     if parameters:
         set_parameter_values(sbml_model, parameters)

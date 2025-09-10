@@ -3,11 +3,11 @@ requires = ["hatchling>=1.24.2"]
 build-backend = "hatchling.build"
 
 [project]
-name = "PyCNO"
+name = "pycno"
 version = "0.1.0"
 description = "Physiologically based pharmacokinetic (PBPK) modeling utilities for Python"
 readme = "README.md"
-#requires-python = ">=3.10,<3.13"
+requires-python = "<3.13"
 authors = [
     { name = "James Fowler", email = "jfowler@bccrc.ca" }
 ]
@@ -19,8 +19,8 @@ dependencies = [
   "libroadrunner>=2.5",
 ]
 
-[tool.hatch.build.targets.wheel]
-packages = ["pycno"]
+[tool.hatch.build]
+source-directory = "src"
 
 [project.urls]
 Homepage = "https://github.com/qurit/PyCNO"

@@ -4,3 +4,6 @@ sbr=sbioroot;
 mc = sbr.Models(end);
 mn = copyobj(mc);
 sbmlexport(mn, 'PBPK_177Lu_PSMA.sbml')
+
+
+%% need to add variants
