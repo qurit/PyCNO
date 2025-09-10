@@ -2,7 +2,7 @@
 
 ## Description
 
-Welcome to PyCNO - Python Computational Nuclear Oncology! This repository is centered around computational methods for predicitive dosimetry. Currently, this repository contains one prostate specific membrane antigen (PSMA) physiologically based pharmacokinetic (PBPK) model. We are building this framework to support multiple models and futher resources for simulating and fitting biodistribution.
+Welcome to PyCNO - Python Computational Nuclear Oncology! This repository is centered around computational methods for predicitive dosimetry. Currently, this repository contains one prostate specific membrane antigen (PSMA) physiologically based pharmacokinetic (PBPK) model. We are building this framework to support multiple models and futher resources for simulating and fitting radiopharmaceutical biodistribution.
 
 This repository contains a **python** implementation of physiologically based pharmacokinetic (PBPK) modeling of radiopharmaceutical therapies as developed in the following paper:
 
@@ -13,10 +13,10 @@ EJNMMI Radiopharmacy and Chemistry, vol. 9, pp. 6, 2024
 
 The original model was implemented in **MATLAB SimBiology** and can be found in the "matlab" directory. It has also been exported in the Systems Biology Markup Language (SBML) using the SBMLConversion.m script. The functions.py script contains some functions for using the SBML file in Python along with example usage in example_script.py. The motivation for having the model in Python is twofold:
 
-1. Open Source - Can be run by Anyone wihtout a MATLAB Lisence
+1. Open Source - Can be run by anyone without a MATLAB Lisence
 2. Easily integrated in workflows with other Python packages
 
-That being said, we acknowledge the advantages of MATLAB SimBiology (namely the model GUI), and ourselves do a lot of model modifications in SimBiology, and then export the final product for integration into other workflows in Python.
+That being said, we acknowledge the advantages of MATLAB SimBiology (namely the model GUI), and ourselves do a lot of model modifications in SimBiology, and then export the final product for integration into other workflows in Python. As such, we have included a short script in the matlab folder for seamless conversion from SimBiology to an SBML version compatible with PyCNO.
 
 ## Installation
 
