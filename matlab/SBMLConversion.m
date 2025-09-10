@@ -1,6 +1,6 @@
 %% Export model to SBML
-simbiology('AlbuminModelNewImplementation.sbproj')
+simbiology('C:\Users\jfowler\OneDrive - UBC\Documents\Qurit\PBPK\Refactored Model\PBPK_177Lu_PSMA.sbproj')
 sbr=sbioroot;
 mc = sbr.Models(end);
 mn = copyobj(mc);
-sbmlexport(mn, 'PSMAModel.sbml')
+sbmlexport(mn, 'PBPK_177Lu_PSMA.sbml')

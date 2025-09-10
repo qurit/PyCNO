@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling>=1.24.2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "PyCNO"
+version = "0.1.0"
+description = "Physiologically based pharmacokinetic (PBPK) modeling utilities for Python"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+authors = [
+  { name = "Qurit" }
+]
+
+dependencies = [
+  "numpy>=1.22",
+  "tqdm>=4.64",
+  "python-libsbml>=5.20",
+  "libroadrunner>=2.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/qurit/PyCNO"
+Repository = "https://github.com/qurit/PyCNO"
+Issues = "https://github.com/qurit/PyCNO/issues"

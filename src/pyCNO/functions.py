@@ -40,19 +40,19 @@ def get_species(species_name, result, rr, sbml_model):
     NMOL2MBQ = get_parameter(sbml_model, 'lambdaPhys') / 60 * 6.022e23 / 10**9 / 10**6
     for compartment in sbml_model.getListOfCompartments():
             if compartment.getName() == species_name.split('.')[0]:
-                compartment_size = getattr(rr, compartment.getId())
+                compartment_size = compartment.getSize()
                 break
     for species in sbml_model.getListOfSpecies():
         if species.getName() == species_name.split('.')[1]:
             return (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
         
-def sum_region(region, species_name, result, rr, sbml_model):
+def sum_region(region, species_name, result, sbml_model):
     NMOL2MBQ = get_parameter(sbml_model, 'lambdaPhys') / 60 * 6.022e23 / 10**9 / 10**6
     total = np.zeros(result.shape[0])
     for compartment in sbml_model.getListOfCompartments():
             if region in compartment.getName():
                 compartment_id = compartment.getId()
-                compartment_size = getattr(rr, compartment_id)
+                compartment_size = compartment.getSize()
                 for species in sbml_model.getListOfSpecies():
                     if species.getCompartment() == compartment_id and species_name in species.getName():
                         total += (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
@@ -72,22 +72,21 @@ def parameter_sweep(sbml_string, start, stop, steps, parameter_ids, swept_values
 def multicore_parameter_sweep(args):
         return parameter_sweep(*args)
 
-def runPBPK(start: int = 0, 
+def runPBPK(model_path: str = None,
+            start: int = 0, 
             stop: int = 60, 
             steps: int = 100, 
             hotamount: float = None, 
-            coldamount = None, 
+            coldamount: float = None, 
             parameters: dict = None,
             observables: list = None,
             swept_parameters: list = None,
             swept_values: list = None
             ):
     #ADD Docstring
-    path = os.path.dirname(__file__)
-    modelpath = os.path.join(path, 'model/PSMAModel.sbml')
-    print(modelpath)
+    num_curves = 1
     reader = libsbml.SBMLReader()
-    document = reader.readSBML(modelpath)
+    document = reader.readSBML(model_path)
     sbml_model = document.getModel()
 
     if parameters:
@@ -108,19 +107,22 @@ def runPBPK(start: int = 0,
         sbml_string = libsbml.writeSBMLToString(document)
 
         args = [(sbml_string, start, stop, steps, parameter_ids, values) for values in swept_values]
-        results = process_map(multicore_parameter_sweep, args)
-              
+        num_curves = len(args)
+        result = process_map(multicore_parameter_sweep, args)
+
     else:
         sbml_string = libsbml.writeSBMLToString(document)
         rr = roadrunner.RoadRunner(sbml_string)
-        result = rr.simulate(start, stop, steps)
+        result = []
+        result.append(rr.simulate(start, stop, steps))
 
     if not observables:
         observables = ['Tumor1', 'Tumor2', 'Kidney', 'Heart', 'SG', 'Bone', 'TumorRest', 'Spleen', 'Liver', 'Prostate', 'GI', 'Rest', 'Skin', 'Muscle', 'Brain', 'RedMarrow', 'Lungs', 'Adipose']
     
     time = np.linspace(start, stop, steps)
-    TACs = np.zeros((len(time), len(observables)))
-    for i, observable in enumerate(observables):
-        TACs[:,i] = (sum_region(observable, 'Hot', result, rr, sbml_model))
+    TACs = np.zeros((num_curves, len(time), len(observables)))
+    for curve in range(num_curves):
+        for i, observable in enumerate(observables):
+            TACs[curve,:,i] = (sum_region(observable, 'Hot', result[curve], sbml_model))
 
     return time, TACs
