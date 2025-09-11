@@ -56,7 +56,6 @@ def sum_region(region, species_name, result, sbml_model):
                 for species in sbml_model.getListOfSpecies():
                     if species.getCompartment() == compartment_id and species_name in species.getName():
                         total += (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
-                        print(compartment_size)
 
     return total
 
