@@ -11,12 +11,16 @@ This repository contains a **python** implementation of physiologically based ph
 
 EJNMMI Radiopharmacy and Chemistry, vol. 9, pp. 6, 2024
 
+![SimBiology Implementation](/PBPK_model.png)
+
 The original model was implemented in **MATLAB SimBiology** and can be found in the "matlab" directory. It has also been exported in the Systems Biology Markup Language (SBML) using the SBMLConversion.m script. The functions.py script contains some functions for using the SBML file in Python along with example usage in example_script.py. The motivation for having the model in Python is twofold:
 
 1. Open Source - Can be run by anyone without a MATLAB Lisence
 2. Easily integrated in workflows with other Python packages
 
 That being said, we acknowledge the advantages of MATLAB SimBiology (namely the model GUI), and ourselves do a lot of model modifications in SimBiology, and then export the final product for integration into other workflows in Python. As such, we have included a short script in the matlab folder for seamless conversion from SimBiology to an SBML version compatible with PyCNO.
+
+Finally, this is a new repository so we are making improvemnts. Check back for updates!
 
 ## Installation
 
