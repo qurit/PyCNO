@@ -1,4 +1,4 @@
-# PyPBPK
+# PyCNO
 
 ## Description
 
