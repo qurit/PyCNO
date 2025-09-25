@@ -67,7 +67,7 @@ def sum_region(region, species_name, result, sbml_model, rr):
                         total += (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
     return total
 
-def parameter_sweep(sbml_string, start, stop, steps, parameter_ids, swept_values):
+def parameter_sweep(sbml_string, start, stop, steps, parameter_ids, observables, time, swept_values):
     document = libsbml.readSBMLFromString(sbml_string)
     sbml_model = document.getModel()
     for i, id in enumerate(parameter_ids):
@@ -76,7 +76,10 @@ def parameter_sweep(sbml_string, start, stop, steps, parameter_ids, swept_values
     sbml_string = libsbml.writeSBMLToString(document)
     rr = roadrunner.RoadRunner(sbml_string)
     result = rr.simulate(start, stop, steps)
-    return result
+    TAC = np.zeros((len(time), len(observables)))
+    for i, observable in enumerate(observables):
+        TAC[:,i] = (sum_region(observable, 'Hot', result, sbml_model, rr))
+    return TAC
 
 def multicore_parameter_sweep(args):
         return parameter_sweep(*args)
@@ -100,7 +103,11 @@ def run_model(model_name: str = None,
     reader = libsbml.SBMLReader()
     document = reader.readSBML(model_path)
     sbml_model = document.getModel()
+    time = np.linspace(start, stop, steps)
 
+    if not observables:
+        observables = ['Tumor1', 'Tumor2', 'Kidney', 'Heart', 'SG', 'Bone', 'TumorRest', 'Spleen', 'Liver', 'Prostate', 'GI', 'Rest', 'Skin', 'Muscle', 'Brain', 'RedMarrow', 'Lungs', 'Adipose']
+    
     if parameters:
         set_parameter_values(sbml_model, parameters)
 
@@ -121,23 +128,18 @@ def run_model(model_name: str = None,
             parameter_ids.append(get_parameter_id(sbml_model, parameter))
         sbml_string = libsbml.writeSBMLToString(document)
 
-        args = [(sbml_string, start, stop, steps, parameter_ids, values) for values in swept_values]
+        args = [(sbml_string, start, stop, steps, parameter_ids, observables, time, values) for values in swept_values]
         num_curves = len(args)
-        result = process_map(multicore_parameter_sweep, args)
+        results = process_map(multicore_parameter_sweep, args)
+        TACs = np.stack(results, axis=0)
 
     else:
         sbml_string = libsbml.writeSBMLToString(document)
         rr = roadrunner.RoadRunner(sbml_string)
         result = []
         result.append(rr.simulate(start, stop, steps))
-
-    if not observables:
-        observables = ['Tumor1', 'Tumor2', 'Kidney', 'Heart', 'SG', 'Bone', 'TumorRest', 'Spleen', 'Liver', 'Prostate', 'GI', 'Rest', 'Skin', 'Muscle', 'Brain', 'RedMarrow', 'Lungs', 'Adipose']
-    
-    time = np.linspace(start, stop, steps)
-    TACs = np.zeros((num_curves, len(time), len(observables)))
-    for curve in range(num_curves):
+        TACs = np.zeros((num_curves, len(time), len(observables)))
         for i, observable in enumerate(observables):
-            TACs[curve,:,i] = (sum_region(observable, 'Hot', result[curve], sbml_model, rr))
+            TACs[0,:,i] = (sum_region(observable, 'Hot', result[0], sbml_model, rr))
 
     return time, TACs
