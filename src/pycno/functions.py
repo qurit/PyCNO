@@ -67,7 +67,7 @@ def sum_region(region, species_name, result, sbml_model, rr):
                         total += (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
     return total
 
-def parameter_sweep(sbml_string, start, stop, steps, parameter_ids, observables, time, swept_values):
+def parameter_sweep(sbml_string, stop, steps, parameter_ids, observables, time, swept_values):
     document = libsbml.readSBMLFromString(sbml_string)
     sbml_model = document.getModel()
     for i, id in enumerate(parameter_ids):
@@ -75,7 +75,7 @@ def parameter_sweep(sbml_string, start, stop, steps, parameter_ids, observables,
 
     sbml_string = libsbml.writeSBMLToString(document)
     rr = roadrunner.RoadRunner(sbml_string)
-    result = rr.simulate(start, stop, steps)
+    result = rr.simulate(0, stop, steps)
     TAC = np.zeros((len(time), len(observables)))
     for i, observable in enumerate(observables):
         TAC[:,i] = (sum_region(observable, 'Hot', result, sbml_model, rr))
@@ -84,37 +84,49 @@ def parameter_sweep(sbml_string, start, stop, steps, parameter_ids, observables,
 def multicore_parameter_sweep(args):
         return parameter_sweep(*args)
 
-def run_model(model_name: str = None,
-            start: int = 0, 
+def run_model(model_name: str,
+            observables: list,
             stop: int = 60, 
             steps: int = 100, 
             hotamount: float = 10, 
             coldamount: float = 100, 
             parameters: dict = None,
-            compartments: dict = None,
-            observables: list = None,
+            compartment_volumes: dict = None,
             swept_parameters: list = None,
             swept_values: list = None
             ):
-    '''
-    This function simulates the sbml model given initial parameters. Start and stop times are in units of minutes. Hot and cold ligand amounts are in units of nmol.
-    '''
+    """
+    Simulates SBML model.
+
+    Args:
+        model_name (str): Name of sbml file (without .sbml)
+        observables (list): Regions to output
+        stop (int): Simulation end time in minutes
+        steps (int): Number of simulation steps
+        hotamount (float): Hot ligand amount in nmol
+        coldamount (float): Cold ligand amount in nmol
+        parameters (dict): Parameter input values
+        compartment_volumes (dict): Compartment volumes in L
+        swept_parameters (list): Parameters to sweep over
+        swept_values (list): Values to sweep over
+        
+    Returns:
+        TACs[n_curves, n_steps, n_observables]: Time activity curves in units of MBq.
+    
+    """
     num_curves = 1
     module_path = Path(__file__).parent
     model_path = module_path / "models" / f"{model_name}.sbml"
     reader = libsbml.SBMLReader()
     document = reader.readSBML(model_path)
     sbml_model = document.getModel()
-    time = np.linspace(start, stop, steps)
+    time = np.linspace(0, stop, steps)
 
-    if not observables:
-        observables = ['Tumor1', 'Tumor2', 'Kidney', 'Heart', 'SG', 'Bone', 'TumorRest', 'Spleen', 'Liver', 'Prostate', 'GI', 'Rest', 'Skin', 'Muscle', 'Brain', 'RedMarrow', 'Lungs', 'Adipose']
-    
     if parameters:
         set_parameter_values(sbml_model, parameters)
 
-    if compartments:
-        set_compartment_sizes(sbml_model, compartments)
+    if compartment_volumes:
+        set_compartment_sizes(sbml_model, compartment_volumes)
 
     if hotamount:
         if coldamount:
@@ -130,7 +142,7 @@ def run_model(model_name: str = None,
             parameter_ids.append(get_parameter_id(sbml_model, parameter))
         sbml_string = libsbml.writeSBMLToString(document)
 
-        args = [(sbml_string, start, stop, steps, parameter_ids, observables, time, values) for values in swept_values]
+        args = [(sbml_string, stop, steps, parameter_ids, observables, time, values) for values in swept_values]
         num_curves = len(args)
         results = process_map(multicore_parameter_sweep, args)
         TACs = np.stack(results, axis=0)
@@ -139,7 +151,7 @@ def run_model(model_name: str = None,
         sbml_string = libsbml.writeSBMLToString(document)
         rr = roadrunner.RoadRunner(sbml_string)
         result = []
-        result.append(rr.simulate(start, stop, steps))
+        result.append(rr.simulate(0, stop, steps))
         TACs = np.zeros((num_curves, len(time), len(observables)))
         for i, observable in enumerate(observables):
             TACs[0,:,i] = (sum_region(observable, 'Hot', result[0], sbml_model, rr))

@@ -7,6 +7,8 @@
 
 Welcome to PyCNO - Python Computational Nuclear Oncology! This repository is centered around computational methods for predictive dosimetry and methods enabling virtual theranostic trials (VTTs). Currently, this repository contains one prostate-specific membrane antigen (PSMA) physiologically based pharmacokinetic (PBPK) model. We are building this framework to support multiple models and further resources for simulating and fitting radiopharmaceutical biodistribution.
 
+While there exist many tools for simulating SBML models, this package simplifies the process for PBPK modeling of radiopharmaceutical therapies (RPTs) based on the models we are releasing.
+
 This repository contains a **Python** implementation of physiologically based pharmacokinetic modeling of radiopharmaceutical therapies as developed in the following paper:
 
 ["Physiologically based radiopharmacokinetic (PBRPK) modeling to simulate and analyze radiopharmaceutical therapies: studies of non-linearities, multi-bolus injections, and albumin binding"
