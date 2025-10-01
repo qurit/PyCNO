@@ -14,18 +14,20 @@ This repository contains a **Python** implementation of physiologically based ph
 
 EJNMMI Radiopharmacy and Chemistry, vol. 9, pp. 6, 2024
 
-We also have a simplified model and plan to release models in the future incorporating more features (imune response, pharmacodynamic modeling, etc.) as well as other radioligands.
+We also have a simplified model and plan to release models in the future that incorporate more features (immune response, pharmacodynamic modelling, etc.) as well as other radioligands.
 
 <table>
 <tr>
 <td>
 
-**Original Model**  
+### Original Model  
+
+Model from the publication listed above. Includes multiple lesions, organs at risk and other organs.
 
 </td>
 <td>
 
-<img src="figures/PBPK_model.png" alt="Original Model" width="150">
+<img src="figures/PBPK_model.png" alt="Original Model" width="250">
 
 </td>
 </tr>
@@ -33,21 +35,19 @@ We also have a simplified model and plan to release models in the future incorpo
 <tr>
 <td>
 
-**Reduced Model**  
+### Reduced Model  
 
+Simplified model with only key organs. This model does not include lesions.
 </td>
 <td>
 
-<img src="figures/Reduced_model_figure.png" alt="Image 2" width="150">
+<img src="figures/Reduced_model_figure.png" alt="Image 2" width="250">
 
 </td>
 </tr>
 </table>
 
-
-
-
-The original model was implemented in **MATLAB SimBiology** and can be found in the "matlab" directory. It has also been exported in the Systems Biology Markup Language (SBML) using the SBMLConversion.m script. The functions.py script contains some functions for using the SBML file in Python along with example usage in example_script.py. The motivation for having the model in Python is twofold:
+The original model was implemented in **MATLAB SimBiology** and can be found in the "matlab" directory. It has also been exported in the Systems Biology Markup Language (SBML) using the SBMLConversion.m script. The functions.py script contains some functions for using the SBML file in Python, along with example usage in example_script.py. The motivation for having the model in Python is twofold:
 
 1. Open Source - Can be run by anyone without a MATLAB license
 2. Easily integrated into other Python workflows
@@ -94,7 +94,7 @@ If you use this repository, please cite the original paper:
 </td>
 <td>
 
-<img src="figures/PyCNO_logo.png" alt="PyCNO Logo" width="350">
+<img src="figures/PyCNO_logo.png" alt="PyCNO Logo" width="500">
 
 </td>
 </tr>
