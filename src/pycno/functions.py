@@ -96,7 +96,9 @@ def run_model(model_name: str = None,
             swept_parameters: list = None,
             swept_values: list = None
             ):
-    
+    '''
+    This function simulates the sbml model given initial parameters. Start and stop times are in units of minutes. Hot and cold ligand amounts are in units of nmol.
+    '''
     num_curves = 1
     module_path = Path(__file__).parent
     model_path = module_path / "models" / f"{model_name}.sbml"
