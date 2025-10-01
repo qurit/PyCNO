@@ -1,9 +1,7 @@
 %% Export model to SBML
-simbiology('C:\Users\jfowler\OneDrive - UBC\Documents\Qurit\PBPK\Refactored Model\PBPK_177Lu_PSMA.sbproj')
+% simbiology('path_to_model.sbproj')
 sbr=sbioroot;
 mc = sbr.Models(end);
 mn = copyobj(mc);
-sbmlexport(mn, 'PBPK_177Lu_PSMA.sbml')
-
-
-%% need to add variants
+commit(mc.variants, mn); % repeat for all variants if needed by indexing varinat number i. e. commit(mc.variants(1), mn)
+sbmlexport(mn, 'output.sbml')

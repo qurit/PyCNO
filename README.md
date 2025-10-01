@@ -1,4 +1,7 @@
-# PyCNO
+<h1>
+  <img src="PyCNO_logo_no_background_no_text.png" alt="PyCNO Logo" width="70" style="vertical-align: top; margin-right: 10px;" />
+  <span style="font-size: 1.8em;">PyCNO</span>
+</h1>
 
 ## Description
 
