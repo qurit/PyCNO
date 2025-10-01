@@ -1,20 +1,51 @@
 <h1>
-  <img src="PyCNO_logo_no_background_no_text.png" alt="PyCNO Logo" width="70" style="vertical-align: top; margin-right: 10px;" />
-  <span style="font-size: 1.8em;">PyCNO</span>
+  <img src="figures/PyCNO_logo_no_background_no_text.png" alt="PyCNO Logo" width="80" valign="middle">
+  PyCNO
 </h1>
 
 ## Description
 
-Welcome to PyCNO - Python Computational Nuclear Oncology! This repository is centered around computational methods for predictive dosimetry. Currently, this repository contains one prostate-specific membrane antigen (PSMA) physiologically based pharmacokinetic (PBPK) model. We are building this framework to support multiple models and further resources for simulating and fitting radiopharmaceutical biodistribution.
+Welcome to PyCNO - Python Computational Nuclear Oncology! This repository is centered around computational methods for predictive dosimetry and methods enabling virtual theranostic trials (VTTs). Currently, this repository contains one prostate-specific membrane antigen (PSMA) physiologically based pharmacokinetic (PBPK) model. We are building this framework to support multiple models and further resources for simulating and fitting radiopharmaceutical biodistribution.
 
-This repository contains a **Python** implementation of physiologically based pharmacokinetic (PBPK) modeling of radiopharmaceutical therapies as developed in the following paper:
+This repository contains a **Python** implementation of physiologically based pharmacokinetic modeling of radiopharmaceutical therapies as developed in the following paper:
 
 ["Physiologically based radiopharmacokinetic (PBRPK) modeling to simulate and analyze radiopharmaceutical therapies: studies of non-linearities, multi-bolus injections, and albumin binding"
 ](https://link.springer.com/article/10.1186/s41181-023-00236-w)
 
 EJNMMI Radiopharmacy and Chemistry, vol. 9, pp. 6, 2024
 
-![SimBiology Implementation](/PBPK_model.png)
+We also have a simplified model and plan to release models in the future incorporating more features (imune response, pharmacodynamic modeling, etc.) as well as other radioligands.
+
+<table>
+<tr>
+<td>
+
+**Original Model**  
+
+</td>
+<td>
+
+<img src="figures/PBPK_model.png" alt="Original Model" width="150">
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+**Reduced Model**  
+
+</td>
+<td>
+
+<img src="figures/Reduced_model_figure.png" alt="Image 2" width="150">
+
+</td>
+</tr>
+</table>
+
+
+
 
 The original model was implemented in **MATLAB SimBiology** and can be found in the "matlab" directory. It has also been exported in the Systems Biology Markup Language (SBML) using the SBMLConversion.m script. The functions.py script contains some functions for using the SBML file in Python along with example usage in example_script.py. The motivation for having the model in Python is twofold:
 
@@ -46,11 +77,25 @@ To get started in **Python**, see the examples folder.
 
 To get started in **MATLAB Simbiology**, open the .sbproj file in the "matlab" directory. This will open a MATLAB-based GUI where the model can be explored, edited, and run. If you wish to export your altered MATLAB Simbiology model to be run in Python, use the export_model.m script as found in the "matlab" directory.
 
+## Future
+Stay tuned for more updates coming soon, including: optimization methods for fitting patient data, digital twinning of patients based on pre-therapy PET imaging, and more!
+
 ## **Citation**
+<table>
+<tr>
+<td>
 
 If you use this repository, please cite the original paper:
-
 > **Fele-Paranj, A., Saboury, B., Uribe, C., & Rahmim, A.**  
 > *Physiologically based radiopharmacokinetic modeling to simulate and analyze radiopharmaceutical therapies: studies of non-linearities, multi-bolus injections, and albumin binding*.  
 > **EJNMMI Radiopharmacy and Chemistry, vol. 9, pp. 6, 2024**  
 > DOI: [10.1186/s41181-023-00236-w](https://doi.org/10.1186/s41181-023-00236-w) 
+
+</td>
+<td>
+
+<img src="figures/PyCNO_logo.png" alt="PyCNO Logo" width="350">
+
+</td>
+</tr>
+</table>
