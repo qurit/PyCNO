@@ -68,7 +68,7 @@ Finally, this is a new repository, so we are making improvements. Check back for
    
    First navigate to cloned repository.
    ```sh
-   conda create -n pycno_env python=3.12
+   conda create -n pycno_env -c conda-forge python=3.12
    conda activate pycno_env
    pip install -e .
    ```
