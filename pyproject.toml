@@ -7,7 +7,7 @@ name = "pycno"
 version = "0.1.0"
 description = "Physiologically based pharmacokinetic (PBPK) modeling utilities for Python"
 readme = "README.md"
-requires-python = "<3.13"
+requires-python = "<3.14"
 authors = [
     { name = "James Fowler", email = "jfowler@bccrc.ca" }
 ]

@@ -1,30 +1,20 @@
 """PyCNO: Physiologically based radiopharmacokinetic modeling utilities."""
-
+ 
 import os
 from pathlib import Path
-
-# --- Compatibility fix for libroadrunner in Conda environments ---
-def _fix_conda_ld_library_path():
-    """Ensure Conda's libpython is discoverable."""
-    conda_prefix = os.environ.get("CONDA_PREFIX")
-    if not conda_prefix:
-        return
-
-    lib_dir = Path(conda_prefix) / "lib"
-    if not lib_dir.exists():
-        return
-
-    ld_path = os.environ.get("LD_LIBRARY_PATH", "")
-    if str(lib_dir) not in ld_path.split(":"):
-        os.environ["LD_LIBRARY_PATH"] = f"{lib_dir}:{ld_path}"
+import ctypes
+import sys
+ 
+# --- Preload libpython for libroadrunner in Conda environments ---
+conda_prefix = os.environ.get("CONDA_PREFIX")
+if conda_prefix:
+    libpython_path = Path(conda_prefix) / "lib" / f"libpython{sys.version_info.major}.{sys.version_info.minor}.so.1.0"
+    if libpython_path.exists():
         try:
-            import ctypes
-            ctypes.CDLL(None)
-        except Exception:
-            pass
-
-_fix_conda_ld_library_path()
-
+            ctypes.CDLL(str(libpython_path))
+        except Exception as e:
+            print(f"Warning: failed to preload libpython: {e}")
+ 
 from .functions import run_model
-
+ 
 __all__ = ["run_model"]
