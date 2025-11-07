@@ -4,7 +4,8 @@ import roadrunner
 from pathlib import Path
 from tqdm.contrib.concurrent import process_map
 
-def set_parameter_values(sbml_model, parameter_dict):
+def set_parameter_values(sbml_model, parameter_dict_in):
+    parameter_dict = parameter_dict_in.copy() 
     for parameter in sbml_model.getListOfParameters():
         for parameter_name in list(parameter_dict.keys()):
             if parameter.getName() == parameter_name:
@@ -12,7 +13,8 @@ def set_parameter_values(sbml_model, parameter_dict):
     if parameter_dict:
         [print(f"Parameter {parameter_name} not found in the model.") for parameter_name in parameter_dict.keys()]
 
-def set_species_values(sbml_model, species_dict):
+def set_species_values(sbml_model, species_dict_in):
+    species_dict = species_dict_in.copy()
     for species_name in list(species_dict.keys()):
         for compartment in sbml_model.getListOfCompartments():
             if compartment.getName() == species_name.split('.')[0]:
@@ -24,7 +26,8 @@ def set_species_values(sbml_model, species_dict):
     if species_dict:
         [print(f"Species {species_name} not found in the model.") for species_name in species_dict.keys()]
 
-def set_compartment_sizes(sbml_model, compartment_dict):
+def set_compartment_sizes(sbml_model, compartment_dict_in):
+    compartment_dict = compartment_dict_in.copy()
     for comp in sbml_model.getListOfCompartments():
         if comp.getName() in compartment_dict:
             comp.setSize(float(compartment_dict[comp.getName()]))
