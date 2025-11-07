@@ -4,6 +4,9 @@ import roadrunner
 from pathlib import Path
 from tqdm.contrib.concurrent import process_map
 
+class ModelError(Exception):
+    pass
+
 def set_parameter_values(sbml_model, parameter_dict_in):
     parameter_dict = parameter_dict_in.copy() 
     for parameter in sbml_model.getListOfParameters():
@@ -62,7 +65,7 @@ def sum_region(region, species_name, result, sbml_model, rr):
     NMOL2MBQ = get_parameter(sbml_model, 'lambdaPhys') / 60 * 6.022e23 / 10**9 / 10**6
     total = np.zeros(result.shape[0])
     for compartment in sbml_model.getListOfCompartments():
-            if region in compartment.getName():
+            if compartment.getName().startswith(region):
                 compartment_id = compartment.getId()
                 compartment_size = rr[f"{compartment_id}"]
                 for species in sbml_model.getListOfSpecies():
@@ -131,13 +134,18 @@ def run_model(model_name: str,
     if compartment_volumes:
         set_compartment_sizes(sbml_model, compartment_volumes)
 
-    if hotamount:
-        if coldamount:
+    for comp in sbml_model.getListOfCompartments():
+        if 'Vein' == comp.getName():
             species_list = {'Vein.Hot': hotamount,
                             'Vein.Cold': coldamount}
-        else:
-            species_list = {'Vein.Hot': hotamount}
-        set_species_values(sbml_model, species_list)
+            break
+        elif 'Blood' == comp.getName():
+            species_list = {'Blood.Hot': hotamount,
+                            'Blood.Cold': coldamount}
+            break
+        raise ModelError(f"No blood or vein compartment found for injection.")
+            
+    set_species_values(sbml_model, species_list)
 
     if swept_parameters:
         parameter_ids = []
