@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import ctypes
 import sys
- 
+
 # --- Preload libpython for libroadrunner in Conda environments ---
 conda_prefix = os.environ.get("CONDA_PREFIX")
 if conda_prefix:
@@ -12,9 +12,9 @@ if conda_prefix:
     if libpython_path.exists():
         try:
             ctypes.CDLL(str(libpython_path))
-        except Exception as e:
+        except OSError as e:
             print(f"Warning: failed to preload libpython: {e}")
- 
-from .functions import run_model
- 
-__all__ = ["run_model"]
+
+from .functions import Model
+
+__all__ = ["Model"]

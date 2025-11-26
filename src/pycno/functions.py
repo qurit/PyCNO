@@ -2,10 +2,166 @@ import libsbml
 import numpy as np
 import roadrunner
 from pathlib import Path
+import os
+import multiprocessing as mp
+mp.set_start_method("spawn", force=True)
 from tqdm.contrib.concurrent import process_map
+
+
+
+# NEW: module-level worker to avoid pickling Model (and SWIG objects)
+def parameter_sweep_worker(args):
+    sbml_string, stop, steps, parameter_ids, observables, time, swept_values = args
+    document = libsbml.readSBMLFromString(sbml_string)
+    sbml_model = document.getModel()
+    for i, pid in enumerate(parameter_ids):
+        sbml_model.getParameter(pid).setValue(float(swept_values[i]))
+
+    sbml_string = libsbml.writeSBMLToString(document)
+    rr = roadrunner.RoadRunner(sbml_string)
+    result = rr.simulate(0, stop, steps)
+
+    TAC = np.zeros((len(time), len(observables)))
+    for i, observable in enumerate(observables):
+        TAC[:, i] = (sum_region(observable, 'Hot', result, sbml_model, rr))
+    return TAC
 
 class ModelError(Exception):
     pass
+
+class Model():
+    """
+    Initializes SBML model.
+
+    Args:
+        model_name (str): Name of model in PyCNO or path to SBML file
+        parameters (dict): Parameter input values
+        compartment_volumes (dict): Compartment volumes in L
+        hotamount (float): Hot ligand amount in nmol
+        coldamount (float): Cold ligand amount in nmol
+    """
+    _watched_attrs = {"model_name", "hotamount", "coldamount", "parameters", "compartment_volumes"}
+
+    def __init__(self, model_name, hotamount=None, coldamount=None, parameters=None, compartment_volumes=None):
+        self._initializing = True  # prevent recursion during init
+
+        self.model_name = model_name
+        self.hotamount = hotamount
+        self.coldamount = coldamount
+        self.parameters = parameters
+        self.compartment_volumes = compartment_volumes
+
+        self.sbml_model = None
+        self.document = None
+
+        self._initializing = False
+        self.initialize_sbml_model()
+
+    def __setattr__(self, name, value):
+        super().__setattr__(name, value)
+        if getattr(self, "_initializing", False):
+            return
+        if name in getattr(self, "_watched_attrs", set()):
+            self.initialize_sbml_model()
+
+    def initialize_sbml_model(self):
+        if os.path.exists(self.model_name):
+            model_path = self.model_name
+        else:
+            module_path = Path(__file__).parent
+            model_path = module_path / "models" / f"{self.model_name}.sbml"
+            if os.path.exists(model_path) is False:
+                raise FileNotFoundError(f"Model {self.model_name} not found.")
+
+        reader = libsbml.SBMLReader()
+        document = reader.readSBML(model_path)
+        sbml_model = document.getModel()
+
+        if self.parameters:
+            set_parameter_values(sbml_model, self.parameters)
+
+        if self.compartment_volumes:
+            set_compartment_sizes(sbml_model, self.compartment_volumes)
+
+        if self.hotamount is not None:
+            species_list = None
+            for comp in sbml_model.getListOfCompartments():
+                if 'Vein' == comp.getName():
+                    species_list = {'Vein.Hot': self.hotamount,
+                                    'Vein.Cold': self.coldamount}
+                    break
+                elif 'Blood' == comp.getName():
+                    species_list = {'Blood.Hot': self.hotamount,
+                                    'Blood.Cold': self.coldamount}
+                    break
+            if species_list is None:
+                raise ModelError(f"No blood or vein compartment found for injection.")
+                    
+            set_species_values(sbml_model, species_list)
+
+        self.sbml_model = sbml_model
+        self.document = document
+    
+    def save_sbml(self, path):
+        """
+        Saves current SBML model to file.
+
+        Args:
+            path (str): Path to save SBML file
+        """
+        libsbml.writeSBMLToFile(self.document, path)
+
+    def simulate(self,
+                stop: int = 60, 
+                steps: int = 100,
+                observables: list = None,
+                swept_parameters: list = None,
+                swept_values: list = None
+                ):
+        """
+        Simulates SBML model.
+
+        Args:
+            model_name (str): Name of model in PyCNO or path to SBML file
+            observables (list): Regions to output
+            stop (int): Simulation end time in minutes
+            steps (int): Number of simulation steps
+            hotamount (float): Hot ligand amount in nmol
+            coldamount (float): Cold ligand amount in nmol
+            parameters (dict): Parameter input values
+            compartment_volumes (dict): Compartment volumes in L
+            swept_parameters (list): Parameters to sweep over
+            swept_values (list): Values to sweep over
+            
+        Returns:
+            TACs[n_curves, n_steps, n_observables]: Time activity curves in units of MBq.
+        
+        """
+
+        num_curves = 1
+        time = np.linspace(0, stop, steps)
+
+        if swept_parameters:
+            parameter_ids = []
+            for parameter in swept_parameters:
+                parameter_ids.append(get_parameter_id(self.sbml_model, parameter))
+            sbml_string = libsbml.writeSBMLToString(self.document)
+
+            args = [(sbml_string, stop, steps, parameter_ids, observables, time, values) for values in swept_values]
+            # Use threads to avoid os.fork with JAX's multithreading
+            results = process_map(parameter_sweep_worker, args, max_workers=os.cpu_count(), chunksize=1)
+            TACs = np.stack(results, axis=0)
+        else:
+            sbml_string = libsbml.writeSBMLToString(self.document)
+            rr = roadrunner.RoadRunner(sbml_string)
+            result = []
+            result.append(rr.simulate(0, stop, steps))
+            TACs = np.zeros((num_curves, len(time), len(observables)))
+            for i, observable in enumerate(observables):
+                TACs[0,:,i] = (sum_region(observable, 'Hot', result[0], self.sbml_model, rr))
+
+        return time, TACs
+
 
 def set_parameter_values(sbml_model, parameter_dict_in):
     parameter_dict = parameter_dict_in.copy() 
@@ -72,99 +228,3 @@ def sum_region(region, species_name, result, sbml_model, rr):
                     if species.getCompartment() == compartment_id and species_name in species.getName():
                         total += (result[f"[{species.getId()}]"] * compartment_size * NMOL2MBQ)
     return total
-
-def parameter_sweep(sbml_string, stop, steps, parameter_ids, observables, time, swept_values):
-    document = libsbml.readSBMLFromString(sbml_string)
-    sbml_model = document.getModel()
-    for i, id in enumerate(parameter_ids):
-        sbml_model.getParameter(id).setValue(float(swept_values[i]))
-
-    sbml_string = libsbml.writeSBMLToString(document)
-    rr = roadrunner.RoadRunner(sbml_string)
-    result = rr.simulate(0, stop, steps)
-    TAC = np.zeros((len(time), len(observables)))
-    for i, observable in enumerate(observables):
-        TAC[:,i] = (sum_region(observable, 'Hot', result, sbml_model, rr))
-    return TAC
-
-def multicore_parameter_sweep(args):
-        return parameter_sweep(*args)
-
-def run_model(model_name: str,
-            observables: list,
-            stop: int = 60, 
-            steps: int = 100, 
-            hotamount: float = 10, 
-            coldamount: float = 100, 
-            parameters: dict = None,
-            compartment_volumes: dict = None,
-            swept_parameters: list = None,
-            swept_values: list = None
-            ):
-    """
-    Simulates SBML model.
-
-    Args:
-        model_name (str): Name of sbml file (without .sbml)
-        observables (list): Regions to output
-        stop (int): Simulation end time in minutes
-        steps (int): Number of simulation steps
-        hotamount (float): Hot ligand amount in nmol
-        coldamount (float): Cold ligand amount in nmol
-        parameters (dict): Parameter input values
-        compartment_volumes (dict): Compartment volumes in L
-        swept_parameters (list): Parameters to sweep over
-        swept_values (list): Values to sweep over
-        
-    Returns:
-        TACs[n_curves, n_steps, n_observables]: Time activity curves in units of MBq.
-    
-    """
-    num_curves = 1
-    module_path = Path(__file__).parent
-    model_path = module_path / "models" / f"{model_name}.sbml"
-    reader = libsbml.SBMLReader()
-    document = reader.readSBML(model_path)
-    sbml_model = document.getModel()
-    time = np.linspace(0, stop, steps)
-
-    if parameters:
-        set_parameter_values(sbml_model, parameters)
-
-    if compartment_volumes:
-        set_compartment_sizes(sbml_model, compartment_volumes)
-
-    for comp in sbml_model.getListOfCompartments():
-        if 'Vein' == comp.getName():
-            species_list = {'Vein.Hot': hotamount,
-                            'Vein.Cold': coldamount}
-            break
-        elif 'Blood' == comp.getName():
-            species_list = {'Blood.Hot': hotamount,
-                            'Blood.Cold': coldamount}
-            break
-        raise ModelError(f"No blood or vein compartment found for injection.")
-            
-    set_species_values(sbml_model, species_list)
-
-    if swept_parameters:
-        parameter_ids = []
-        for parameter in swept_parameters:
-            parameter_ids.append(get_parameter_id(sbml_model, parameter))
-        sbml_string = libsbml.writeSBMLToString(document)
-
-        args = [(sbml_string, stop, steps, parameter_ids, observables, time, values) for values in swept_values]
-        num_curves = len(args)
-        results = process_map(multicore_parameter_sweep, args)
-        TACs = np.stack(results, axis=0)
-
-    else:
-        sbml_string = libsbml.writeSBMLToString(document)
-        rr = roadrunner.RoadRunner(sbml_string)
-        result = []
-        result.append(rr.simulate(0, stop, steps))
-        TACs = np.zeros((num_curves, len(time), len(observables)))
-        for i, observable in enumerate(observables):
-            TACs[0,:,i] = (sum_region(observable, 'Hot', result[0], sbml_model, rr))
-
-    return time, TACs
