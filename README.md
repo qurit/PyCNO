@@ -5,9 +5,9 @@
 
 ## Description
 
-Welcome to PyCNO - Python Computational Nuclear Oncology! This repository is centered around computational methods for theranostic and nuclear oncology, including virtual theranostic trials (VTTs) and radiopharmaceutical therapy (RPT) optimization studies. Currently, the repository contains a prostate-specific membrane antigen (PSMA) physiologically based pharmacokinetic (PBPK) model. We are building this framework to support multiple models and further resources (e.g. pharmacodynamic (PD) modeling) for studying and optimizing RPTs.
+Welcome to PyCNO - Python Computational Nuclear Oncology! This repository is centered around computational methods for theranostics and nuclear oncology, including virtual theranostic trials (VTTs) and radiopharmaceutical therapy (RPT) optimization studies. Currently, the repository contains prostate-specific membrane antigen (PSMA) physiologically based pharmacokinetic (PBPK) models. We are building this framework to support multiple models and further resources (e.g. pharmacodynamic (PD) modeling) for studying and optimizing RPTs.
 
-The present repository contains a **Python** implementation of PBPK modeling of RPTs as elaborated in the following paper:
+The present repository contains **Python** implementation of PBPK modeling of RPTs as elaborated in the following paper:
 
 ["Physiologically based radiopharmacokinetic (PBRPK) modeling to simulate and analyze radiopharmaceutical therapies: studies of non-linearities, multi-bolus injections, and albumin binding"
 ](https://link.springer.com/article/10.1186/s41181-023-00236-w)
@@ -85,7 +85,7 @@ Stay tuned for more updates coming soon, including: optimization methods for fit
 <tr>
 <td>
 
-If you use this repository, please cite the original paper:
+If you use this repository, please cite the original paper that created the PBPK engine:
 > **Fele-Paranj, A., Saboury, B., Uribe, C., & Rahmim, A.**  
 > *Physiologically based radiopharmacokinetic modeling to simulate and analyze radiopharmaceutical therapies: studies of non-linearities, multi-bolus injections, and albumin binding*.  
 > **EJNMMI Radiopharmacy and Chemistry, vol. 9, pp. 6, 2024**  
