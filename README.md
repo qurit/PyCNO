@@ -86,7 +86,7 @@ Stay tuned for more updates coming soon, including: optimization methods for fit
 <td>
 
 If you use this repository, please cite the original paper that created the PBPK engine:
-> **Fele-Paranj, A., Saboury, B., Uribe, C., & Rahmim, A.**  
+> **Fele-Paranj, A., Saboury, B., Uribe, C., Rahmim, A.**  
 > *Physiologically based radiopharmacokinetic modeling to simulate and analyze radiopharmaceutical therapies: studies of non-linearities, multi-bolus injections, and albumin binding*.  
 > **EJNMMI Radiopharmacy and Chemistry, vol. 9, pp. 6, 2024**  
 > DOI: [10.1186/s41181-023-00236-w](https://doi.org/10.1186/s41181-023-00236-w) 
