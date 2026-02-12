@@ -20,7 +20,7 @@ We also have a simplified model and plan to release models in the future that in
 <tr>
 <td>
 
-### Original Model  
+### Original Model
 
 Model from the publication listed above. Includes multiple lesions, organs at risk and other organs.
 
@@ -35,7 +35,7 @@ Model from the publication listed above. Includes multiple lesions, organs at ri
 <tr>
 <td>
 
-### Reduced Model  
+### Reduced Model
 
 Simplified model with only key organs. This model does not include lesions.
 </td>
@@ -54,7 +54,7 @@ The original model was implemented in **MATLAB SimBiology** and can be found in 
 
 That being said, we acknowledge the advantages of MATLAB SimBiology (namely the model GUI), and ourselves do a lot of model modifications in SimBiology, and then export the final product for integration into other workflows in Python. As such, we have included a short script in the MATLAB folder for seamless conversion from SimBiology to an SBML version compatible with PyCNO.
 
-Finally, this is a new repository, so we are making improvements. Check back for updates!
+Finally, this is a new repository, so we in active development with many changes happening soon. These may include breaking changes as we figure out the best way forward. Check back for updates!
 
 ## Installation
 
@@ -63,7 +63,7 @@ Finally, this is a new repository, so we are making improvements. Check back for
    git clone https://github.com/qurit/PyCNO
    ```
 2. Install:
-   
+
    First navigate to cloned repository.
    ```sh
    conda create -n pycno_env -c conda-forge python=3.12
