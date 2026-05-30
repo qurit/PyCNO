@@ -32,6 +32,8 @@ class ModelError(Exception):
     pass
 class SimulationError(Exception):
     pass
+class DoseError(Exception):
+    pass
 
 @dataclass
 class Dose():
@@ -43,6 +45,10 @@ class Dose():
             for compartment in sbml_model.getListOfCompartments():
                 if compartment.getName() == species_name.split('.')[0]:
                     break
+                else: compartment = None
+            if compartment == None:
+                comp = species_name.split('.')[0]
+                raise DoseError(f'{comp} compartment not found in model. Change dose target.')
             for species in sbml_model.getListOfSpecies():
                 if species.getCompartment() == compartment.getId() and species.getName() == species_name.split('.')[1]:
                     self.ids.append(species.getId())
