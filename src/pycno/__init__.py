@@ -1,5 +1,5 @@
 """PyCNO: Physiologically based radiopharmacokinetic modeling utilities."""
- 
+
 import os
 from pathlib import Path
 import ctypes
@@ -15,6 +15,6 @@ if conda_prefix:
         except OSError as e:
             print(f"Warning: failed to preload libpython: {e}")
 
-from .functions import Model
+from .modeling.functions import Model, Dose
 
-__all__ = ["Model"]
+__all__ = ["Model", "Dose"]
