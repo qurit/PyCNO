@@ -346,6 +346,7 @@ class Model():
         if self.output_parameters is not None:
             PARAMS = np.zeros((len(self.time), len(self.output_parameters)))
             PARAMS = np.stack(results)[:,:,-len(self.output_parameters):]
+            PARAMS = PARAMS[:, self.time_indices, :]
 
         return SimulationResult(
             time=self.time, 
