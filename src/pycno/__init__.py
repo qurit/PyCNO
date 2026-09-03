@@ -15,6 +15,6 @@ if conda_prefix:
         except OSError as e:
             print(f"Warning: failed to preload libpython: {e}")
 
-from .modeling.functions import Model, Dose
+from .modeling.functions import Model, Dose, build_hybrid_time
 
-__all__ = ["Model", "Dose"]
+__all__ = ["Model", "Dose", "build_hybrid_time"]
