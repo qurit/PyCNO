@@ -7,7 +7,7 @@ name = "pycno"
 version = "0.1.0"
 description = "Physiologically based pharmacokinetic (PBPK) modeling utilities for Python"
 readme = "README.md"
-requires-python = "<3.14"
+requires-python = ">=3.10"
 authors = [
     { name = "James Fowler", email = "jfowler@bccrc.ca" }
 ]
@@ -17,12 +17,69 @@ dependencies = [
   "tqdm>=4.64",
   "python-libsbml>=5.20",
   "libroadrunner>=2.5",
+  "matplotlib",
+  "jax",
+  "pandas",
+  "diffrax",
+  "optax"
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
 ]
 
 [tool.hatch.build]
 source-directory = "src"
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [project.urls]
 Homepage = "https://github.com/qurit/PyCNO"
 Repository = "https://github.com/qurit/PyCNO"
 Issues = "https://github.com/qurit/PyCNO/issues"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "F",      # Pyflakes
+    "W",      # pycodestyle warnings
+    "I",      # import sorting
+    "UP",     # pyupgrade
+    "SIM",    # simplify
+    "C4",     # comprehensions
+    "PERF",   # performance
+    "RUF",    # Ruff-specific
+]
+ignore = [
+  "E501",    # Line too long
+  "RUF001",  # ambiguous Unicode in string
+  "RUF002",  # ambiguous Unicode in docstring
+  "RUF003",  # ambiguous Unicode in comment
+
+  # TODO: Remove following tags once cleaned up!
+  "RUF012",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["src/pycno/tests"]
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tool.pixi.pypi-dependencies]
+pycno = { path = ".", editable = true }
+sbmltoodejax = { path = "../sbmltoodejax" }
+
+[tool.pixi.environments]
+default = { solve-group = "default" }
+dev = { features = ["dev"], solve-group = "default" }
+
+[tool.pixi.tasks]
+
+[tool.pixi.dependencies]
+pytest = ">=9.1.1,<10"
+pre-commit = ">=4.6.2,<5"
+coverage = ">=7.16.2,<8"
+ipython = ">=9.17.1,<10"
