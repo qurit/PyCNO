@@ -86,3 +86,6 @@ ipython = ">=9.17.1,<10"
 ipykernel = ">=7.4.0,<8"
 jupyter = ">=1.1.1,<2"
 pip = ">=26.2.1,<27"
+
+[tool.ty.environment]
+python = ".pixi/envs/default/bin/python"

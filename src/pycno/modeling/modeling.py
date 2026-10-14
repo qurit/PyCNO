@@ -645,7 +645,7 @@ class Model:
                     np.r_[np.ones(n - 1), 0] if i < len(indv_steps) - 1 else np.ones(n)
                     for i, n in enumerate(indv_steps)
                 ]
-            ).astype(np.bool)
+            ).astype(bool)
 
             if self.return_dose_times:
                 self.time = all_time
@@ -657,7 +657,7 @@ class Model:
             stops = np.array([self.time[-1]])
             indv_steps = np.array([self.steps], dtype=np.int64)
             dose_sim_mask = np.array([True])
-            time_indices = np.ones_like(self.time).astype(np.bool)
+            time_indices = np.ones_like(self.time).astype(bool)
 
         return starts, stops, indv_steps, dose_sim_mask, time_indices
 
