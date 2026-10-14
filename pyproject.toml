@@ -21,7 +21,8 @@ dependencies = [
   "jax",
   "pandas",
   "diffrax",
-  "optax"
+  "optax",
+  "sbmltoodejax @ git+https://github.com/qurit/sbmltoodejax@main"
 ]
 
 [dependency-groups]
@@ -70,7 +71,6 @@ platforms = ["linux-64"]
 
 [tool.pixi.pypi-dependencies]
 pycno = { path = ".", editable = true }
-sbmltoodejax = { path = "../sbmltoodejax" }
 
 [tool.pixi.environments]
 default = { solve-group = "default" }
@@ -86,6 +86,16 @@ ipython = ">=9.17.1,<10"
 ipykernel = ">=7.4.0,<8"
 jupyter = ">=1.1.1,<2"
 pip = ">=26.2.1,<27"
+ty = ">=0.0.85,<0.0.86"
+
+[tool.ty.src]
+exclude = [
+  "/testing/**", 
+  "src/pycno/fitting/treatment_optimizer.py",
+  "src/pycno/fitting/protocol_optimization.py",
+  "src/pycno/fitting/data_generation.py",
+  "src/pycno/fitting/fitting_methods/grid_search.py"
+  ]
 
 [tool.ty.environment]
 python = ".pixi/envs/default/bin/python"
